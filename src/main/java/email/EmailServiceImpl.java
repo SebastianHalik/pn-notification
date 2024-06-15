@@ -3,8 +3,8 @@ package email;
 import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,30 +13,25 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+@Slf4j
 @Component
 public class EmailServiceImpl implements EmailService {
 
-    @Value("${spring.mail.username}")
-    private String username;
+    private final MailConfig config;
 
-    @Value("${spring.mail.password}")
-    private String password;
-
-    @Value("${spring.mail.to}")
-    private String to;
-
-    private JavaMailSender emailSender;
+    private final JavaMailSender emailSender;
 
     @Autowired
-    public EmailServiceImpl(JavaMailSender emailSender) {
+    public EmailServiceImpl(MailConfig config, JavaMailSender emailSender) {
+        this.config = config;
         this.emailSender = emailSender;
     }
 
     public void sendSimpleMessage(String subject, String text) {
-        System.out.println("SEND MESSAGE");
+        log.info("Wysyłanie emaila do usera: {}", config.getUsername());
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(username);
-        message.setTo(to);
+        message.setFrom(config.getUsername());
+        message.setTo(config.getTo());
         message.setSubject(subject);
         message.setText(text);
         emailSender.send(message);
@@ -44,7 +39,7 @@ public class EmailServiceImpl implements EmailService {
 
     @PostConstruct
     void init() {
-        System.out.println("STARTING EMAIL SERVICE");
+        log.info("Uruchomiono system wysylania powiadomień");
         sendSimpleMessage("TEST", "Hello World!");
     }
 
@@ -56,7 +51,7 @@ public class EmailServiceImpl implements EmailService {
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        helper.setFrom(username);
+        helper.setFrom(config.getUsername());
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text);
