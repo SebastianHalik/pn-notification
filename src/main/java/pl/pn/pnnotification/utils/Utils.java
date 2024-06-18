@@ -11,9 +11,15 @@ public class Utils {
     private Utils() {
     }
 
-    public static List<String> getOnlyValidEmailsToNotify(List<String> allEmails, List<String> alreadyVotedEmails) {
-        List<String> validEmails = new ArrayList<>(allEmails);
-        validEmails.removeAll(alreadyVotedEmails);
+    public static List<String> getOnlyValidEmailsToNotify(List<String> allVotedEmails,
+        List<String> emailsToNotifyFromSheet) {
+        List<String> validEmails = new ArrayList<>();
+
+        for (String email : emailsToNotifyFromSheet) {
+            if (!allVotedEmails.contains(email)) {
+                validEmails.add(email);
+            }
+        }
 
         printList(validEmails, "Finalna lista emaili do wysłania:");
 
