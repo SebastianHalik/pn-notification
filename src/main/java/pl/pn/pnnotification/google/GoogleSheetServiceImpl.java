@@ -23,10 +23,10 @@ public class GoogleSheetServiceImpl implements GoogleSheetService {
 
     private static final String SHEET_NAME = "Liczba odpowiedzi: 1";
 
-    @Value("${spring.sheet.top.id}")
+    @Value("${sheet.top.id}")
     private String topSheetId;
 
-    @Value("${spring.sheet.notification.id}")
+    @Value("${sheet.notification.id}")
     private String notificationSheetId;
 
     private final Sheets sheet = getSheet();

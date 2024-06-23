@@ -32,4 +32,9 @@ public class Utils {
             log.info(o.toString());
         }
     }
+
+    public static String insertLinkIntoSubject(String subject, String link) {
+        String linkPlaceHolder = "<LINK>";
+        return subject.replace(linkPlaceHolder, link);
+    }
 }

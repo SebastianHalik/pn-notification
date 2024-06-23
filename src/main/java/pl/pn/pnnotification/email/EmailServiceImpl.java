@@ -20,11 +20,11 @@ public class EmailServiceImpl implements EmailService {
         this.emailSender = emailSender;
     }
 
-    public void sendEmail(String subject, String text) {
-        log.info("Wysyłanie emaila do usera: {}", config.getUsername());
+    public void sendEmail(String subject, String text, String emailTo) {
+        log.info("Wysyłanie emaila do usera: {}", emailTo);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(config.getUsername());
-        message.setTo(config.getTo());
+        message.setTo(emailTo);
         message.setSubject(subject);
         message.setText(text);
         emailSender.send(message);

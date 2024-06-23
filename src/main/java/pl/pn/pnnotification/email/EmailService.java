@@ -1,7 +1,6 @@
 package pl.pn.pnnotification.email;
 
-
 public interface EmailService {
 
-    void sendEmail(String subject, String text);
+    void sendEmail(String subject, String text, String emailTo);
 }
