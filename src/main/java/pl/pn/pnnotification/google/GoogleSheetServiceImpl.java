@@ -60,7 +60,7 @@ public class GoogleSheetServiceImpl implements GoogleSheetService {
                 for (List row : values) {
                     allEmailsInThisMonth.add(row.get(1).toString());
                 }
-                allEmailsInThisMonth.removeFirst(); //First cell is column's name
+                allEmailsInThisMonth.remove(0); //First cell is column's name
             }
         } catch (IOException e) {
             log.error(e.getMessage(), e);
