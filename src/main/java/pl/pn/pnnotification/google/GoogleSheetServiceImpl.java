@@ -2,9 +2,11 @@ package pl.pn.pnnotification.google;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import static pl.pn.pnnotification.utils.Utils.printList;
 
 @Service
 @Slf4j
+@Getter
 public class GoogleSheetServiceImpl implements GoogleSheetService {
 
     private static final String SHEET_NAME = "Liczba odpowiedzi: 1";
@@ -46,7 +49,7 @@ public class GoogleSheetServiceImpl implements GoogleSheetService {
     }
 
     @Override
-    public List<String> getMonthTopAllEmails() {
+    public List<String> downloadMonthTopAllEmails() {
         final List<String> allEmailsInThisMonth = new ArrayList<>();
         try {
             ValueRange response = sheet.spreadsheets().values()
@@ -62,6 +65,9 @@ public class GoogleSheetServiceImpl implements GoogleSheetService {
                 }
                 allEmailsInThisMonth.remove(0); //First cell is column's name
             }
+        } catch (GoogleJsonResponseException e) {
+            log.error("ID sheeta topki jest błędne lub puste, gdyż nie znaleziono listy!");
+            log.error(e.getMessage(), e);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
@@ -70,7 +76,7 @@ public class GoogleSheetServiceImpl implements GoogleSheetService {
     }
 
     @Override
-    public List<String> getEmailsToNotify() {
+    public List<String> downloadEmailsToNotify() {
         final List<String> allValidEmailsToNotify = new ArrayList<>();
         try {
             ValueRange response = sheet.spreadsheets().values()
@@ -90,11 +96,14 @@ public class GoogleSheetServiceImpl implements GoogleSheetService {
                     }
                 }
             }
+        } catch (GoogleJsonResponseException e) {
+            log.error("ID sheeta notyfikacji jest błędne lub puste, gdyż nie znaleziono listy!");
+            log.error(e.getMessage(), e);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
 
-        printList(allValidEmailsToNotify, "Lista osob, do powiadomienia");
+        printList(allValidEmailsToNotify, "Lista osob pobranych z notyfikacji z opcją TAK:");
         return allValidEmailsToNotify;
     }
 }

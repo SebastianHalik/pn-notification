@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface GoogleSheetService {
 
-    List<String> getMonthTopAllEmails();
+    List<String> downloadMonthTopAllEmails();
 
-    List<String> getEmailsToNotify();
+    List<String> downloadEmailsToNotify();
 }
