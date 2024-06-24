@@ -93,6 +93,8 @@ public class GoogleSheetServiceImpl implements GoogleSheetService {
                     Boolean isToNotify = "TAK".equals(isToNotifyAsString);
                     if (Boolean.TRUE.equals(isToNotify)) {
                         allValidEmailsToNotify.add(email);
+                    } else if(email.contains("@")) {
+                        log.info("User {} jest na liście, ale wybrał opcję NIE lub ma nieprawidłowy wpis", email);
                     }
                 }
             }
